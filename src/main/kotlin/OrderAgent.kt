@@ -1,11 +1,14 @@
+import kotlin.random.Random
 
-internal class OrderAgent {
+class OrderAgent {
 
     var fromLocation: Location? = null
 
     var toLocation: Location? = null
 
     var weight = 0.0
+
+    var id = Random.nextInt(0, 100)
 
     val orderDistance: Double
         get() = Location.getDistance(fromLocation!!,toLocation!!) ?: 0.0
@@ -24,7 +27,7 @@ internal class OrderAgent {
     }
 
     fun getInfo(): String {
-        return "Заказ ${fromLocation.toString()} -> ${toLocation.toString()}" +
+        return "Заказ № $id: ${fromLocation.toString()} -> ${toLocation.toString()}" +
                 " (${orderDistance} км / ${weight} кг) | Цена: ${orderPrice()}"
     }
 

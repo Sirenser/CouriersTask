@@ -1,4 +1,4 @@
-internal class PlanningOption {
+class PlanningOption {
 
     var order: OrderAgent? = null
 

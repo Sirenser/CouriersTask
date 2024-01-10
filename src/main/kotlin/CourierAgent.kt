@@ -1,6 +1,6 @@
 import java.util.*
 
-internal abstract class CourierAgent {
+abstract class CourierAgent {
     var name: String = ""
     var initialLocation: Location? = null
     var carryingCapacity: Double = 0.0
@@ -36,14 +36,14 @@ internal abstract class CourierAgent {
     private val scheduledOrder = LinkedList<OrderAgent>()
 }
 
-internal class FootCourierAgent : CourierAgent() {
+class FootCourierAgent : CourierAgent() {
     init {
         speed = CompanyAgent.DefaultFootCourierSpeed
         courierPrice = CompanyAgent.PricePerDistance * 0.25
     }
 }
 
-internal class MobileCourierAgent : CourierAgent() {
+class MobileCourierAgent : CourierAgent() {
     init {
         speed = CompanyAgent.DefaultMobileCourierSpeed
         courierPrice = CompanyAgent.PricePerDistance * 0.35

@@ -64,54 +64,60 @@ fun main() {
     println("-----------------------------------------------------------------")
 
     while (isResumed) {
-        println("Введите число для выбора опции:\n 1. Добавить курьера;\n 2. Добавить заказ;\n 3. Закончить;\n")
-        when (readLine()) {
-            "1" -> {
-                print("Введите имя курьера(Name): ")
-                val _name = readLine()
-                print("Введите начальную локацию(x,y): ")
-                val _location = readLine()
-                val _xCord = _location?.get(0)?.toInt() ?: 10
-                val _yCord = _location?.get(2)?.toInt() ?: 10
-                print("Введите переносимый вес(0.0): ")
-                val _carryingCapacity = readLine()
-                company.couriers.add(
-                    FootCourierAgent().apply {
-                        name = _name ?: "Не указано"
-                        initialLocation = Location(xCoord = _xCord, yCoord = _yCord)
-                        carryingCapacity = _carryingCapacity?.toDouble() ?: 5.0
+        println("Введите число для выбора опции:\n" +
+                " 1. Добавить пешего курьера;\n " +
+                " 2. Добавить мобильного курьера;\n" +
+                " 3. Удалить курьера;\n" +
+                " 4. Добавить заказ;\n" +
+                " 5. Удалить заказ;\n " +
+                " 6. Закончить ввод;\n" +
+                " 7. Закончить программу;\n")
+        var isCycled = true
+        while (isCycled) {
+            when (readLine()) {
+                "1" -> {
+                    company.couriers.add(
+                        TaskUtils.addFootCourier()
+                    )
+                    println("Добавлен пеший курьер")
+                }
+                "2" -> {
+                    company.couriers.add(
+                        TaskUtils.addMobileCourier()
+                    )
+                    println("Добавлен мобильный курьер")
+                }
+                "3" -> {
+                    company.couriers.removeIf {
+                        it.name == TaskUtils.removeCourier()
                     }
-                )
-                println("Добавлен курьер")
-            }
-            "2" -> {
-                print("Введите начальную локацию(x,y): ")
-                val _location1 = readLine()
-                val _xCord1 = _location1?.get(0)?.toInt() ?: 10
-                val _yCord1 = _location1?.get(2)?.toInt() ?: 10
-                print("Введите конечную локацию(x,y): ")
-                val _location2 = readLine()
-                val _xCord2 = _location2?.get(0)?.toInt() ?: 10
-                val _yCord2 = _location2?.get(2)?.toInt() ?: 10
-                print("Введите вес(0.0): ")
-                val _carryingCapacity = readLine()
-                company.orders.add(
-                    OrderAgent().apply {
-                        fromLocation = Location(_xCord1, _yCord1)
-                        toLocation = Location(_xCord2, _yCord2)
-                        weight = _carryingCapacity?.toDouble() ?: 5.0
+                    println("Курьер удален")
+                }
+                "4" -> {
+                    company.orders.add(
+                        TaskUtils.addOrder()
+                    )
+                    println("Заказ добавлен")
+                }
+                "5" -> {
+                    company.orders.removeIf {
+                        it.id == TaskUtils.removeOrderById()
                     }
-                )
-                println("Добавлен заказ")
-            }
-            "3" -> {
-                println("Программа завершена")
-                isResumed = false
-                return
-            }
-            else -> {
-                println("Введите корректное значение")
-                continue
+                    println("Заказ удален")
+                }
+                "6" -> {
+                    println("Ввод окончен")
+                    isCycled = false
+                }
+                "7" -> {
+                    println("Программа завершена")
+                    isResumed = false
+                    return
+                }
+                else -> {
+                    println("Введите корректное значение")
+                    continue
+                }
             }
         }
         company.printOrders()
@@ -120,4 +126,69 @@ fun main() {
         println("-----------------------------------------------------------------")
         company.startPlaner()
     }
+
+}
+
+object TaskUtils {
+
+    fun addFootCourier(): FootCourierAgent {
+        print("Введите имя курьера(Name): ")
+        val _name = readLine()
+        print("Введите начальную локацию(x,y): ")
+        val _location = readLine()
+        val _xCord = _location?.get(0)?.toInt() ?: 10
+        val _yCord = _location?.get(2)?.toInt() ?: 10
+        print("Введите переносимый вес(0.0): ")
+        val _carryingCapacity = readLine()
+        return FootCourierAgent().apply {
+            name = _name ?: "Не указано"
+            initialLocation = Location(xCoord = _xCord, yCoord = _yCord)
+            carryingCapacity = _carryingCapacity?.toDouble() ?: 5.0
+        }
+    }
+
+    fun addMobileCourier(): MobileCourierAgent {
+        print("Введите имя курьера(Name): ")
+        val _name = readLine()
+        print("Введите начальную локацию(x,y): ")
+        val _location = readLine()
+        val _xCord = _location?.get(0)?.toInt() ?: 10
+        val _yCord = _location?.get(2)?.toInt() ?: 10
+        print("Введите переносимый вес(0.0): ")
+        val _carryingCapacity = readLine()
+        return MobileCourierAgent().apply {
+            name = _name ?: "Не указано"
+            initialLocation = Location(xCoord = _xCord, yCoord = _yCord)
+            carryingCapacity = _carryingCapacity?.toDouble() ?: 5.0
+        }
+    }
+
+    fun addOrder(): OrderAgent {
+        print("Введите начальную локацию(x,y): ")
+        val _location1 = readLine()
+        val _xCord1 = _location1?.get(0)?.toInt() ?: 10
+        val _yCord1 = _location1?.get(2)?.toInt() ?: 10
+        print("Введите конечную локацию(x,y): ")
+        val _location2 = readLine()
+        val _xCord2 = _location2?.get(0)?.toInt() ?: 10
+        val _yCord2 = _location2?.get(2)?.toInt() ?: 10
+        print("Введите вес(0.0): ")
+        val _carryingCapacity = readLine()
+        return OrderAgent().apply {
+            fromLocation = Location(_xCord1, _yCord1)
+            toLocation = Location(_xCord2, _yCord2)
+            weight = _carryingCapacity?.toDouble() ?: 5.0
+        }
+    }
+
+    fun removeCourier(): String {
+        print("Введите имя удаляемого курьера(Name): ")
+        return readLine() as String
+    }
+
+    fun removeOrderById(): Int {
+        print("Введите номер заказа в списке: ")
+        return readLine()?.get(0)?.toInt() ?: 1
+    }
+
 }
